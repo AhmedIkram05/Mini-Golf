@@ -1,6 +1,7 @@
 import { ball } from './ball.js';
 import { hole } from './hole.js';
 import { levels } from './levels.js';
+import { saveScore, renderLeaderboard } from './leaderboard.js';
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -26,7 +27,6 @@ function loadLevel() {
     ball.speed = 0;
     ball.visible = true;
     hasWon = false;
-    score = 0;
     document.getElementById('score').textContent = 'Score: ' + score;
     
     // Build obstacles - convert relative percentages to absolute values.
@@ -41,13 +41,12 @@ function loadLevel() {
 
 export function initGame() {
     loadLevel();
-    document.getElementById('score').textContent = 'Score: ' + score;
 
-    // HOLE PICKER event listener
-    document.getElementById('holePicker').addEventListener('change', (event) => {
-        currentLevelIndex = parseInt(event.target.value);
-        loadLevel();
-    });
+    // Removed hole picker event listener
+    // document.getElementById('holePicker').addEventListener('change', (event) => {
+    //     currentLevelIndex = parseInt(event.target.value);
+    //     loadLevel();
+    // });
 
     canvas.addEventListener('click', (event) => {
         if (!isMoving && ball.visible) {
@@ -59,7 +58,6 @@ export function initGame() {
             const dx = mouseX - ball.x;
             const dy = mouseY - ball.y;
             ball.angle = Math.atan2(dy, dx);
-            // Multiply slider value by a factor to make the ball faster.
             const power = parseFloat(document.getElementById('powerSlider').value);
             ball.speed = power * 2;
             isMoving = true;
@@ -68,9 +66,11 @@ export function initGame() {
 
     document.getElementById('resetButton').addEventListener('click', () => {
         currentLevelIndex = 0; // restart at level 1
-        document.getElementById('holePicker').value = "0"; // Reset hole picker
+        score = 0; // reset overall score for a new player
+        // Removed resetting the hole picker value since it no longer exists
         loadLevel();
         isMoving = false;
+        document.getElementById('leaderboard').innerHTML = "";
     });
 }
 
@@ -113,7 +113,10 @@ function update() {
                     currentLevelIndex++;
                     loadLevel();
                 } else {
+                    // Save final score and show leaderboard
+                    saveScore(score);
                     alert('Congratulations! You completed all holes with a score of: ' + score);
+                    renderLeaderboard('leaderboard');
                 }
             }, 100);
         }
