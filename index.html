@@ -12,7 +12,23 @@
         <canvas id="gameCanvas" width="800" height="600"></canvas>
         <button id="resetButton">Reset Game</button>
         <div id="score">Score: 0</div>
-        <div id="par" style="text-align: center; font-size: 24px;">Par: 3</div>
+        
+        <!-- NEW HOLE PICKER CONTROL -->
+        <div id="hole-picker" style="text-align:center; margin-top:10px;">
+            <label for="holePicker">Pick a Hole:</label>
+            <select id="holePicker">
+                <option value="0">Hole 1</option>
+                <option value="1">Hole 2</option>
+                <option value="2">Hole 3</option>
+                <option value="3">Hole 4</option>
+                <option value="4">Hole 5</option>
+                <option value="5">Hole 6</option>
+                <option value="6">Hole 7</option>
+                <option value="7">Hole 8</option>
+                <option value="8">Hole 9</option>
+                <option value="9">Hole 10</option>
+            </select>
+        </div>
         <div id="controls" style="position:absolute; bottom:20px; width:100%; text-align:center;">
             <label for="powerSlider">Power:</label>
             <input type="range" id="powerSlider" min="1" max="10" value="10">
