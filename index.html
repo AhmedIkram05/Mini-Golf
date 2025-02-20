@@ -12,7 +12,12 @@
         <canvas id="gameCanvas" width="800" height="600"></canvas>
         <button id="resetButton">Reset Game</button>
         <div id="score">Score: 0</div>
+        <!-- New power slider control -->
+        <div id="controls" style="position:absolute; bottom:20px; width:100%; text-align:center;">
+            <label for="powerSlider">Power:</label>
+            <input type="range" id="powerSlider" min="1" max="10" value="5">
+        </div>
     </div>
-    <script src="script.js"></script>
+    <script type="module" src="main.js"></script>
 </body>
 </html>
