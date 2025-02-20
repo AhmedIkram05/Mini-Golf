@@ -9,11 +9,11 @@
 <body>
     <div id="game-container">
         <h1>2D Mini Golf</h1>
+        <!-- Moved leaderboard container to top-left -->
+        <div id="leaderboard" style="position:absolute; top:40px; left:10px; background:rgba(255,255,255,0.9); padding:10px; border-radius:5px; max-width:200px;"></div>
         <canvas id="gameCanvas" width="800" height="600"></canvas>
         <button id="resetButton">Reset Game</button>
         <div id="score">Score: 0</div>
-        
-        <!-- Removed hole picker control -->
         <div id="controls" style="position:absolute; bottom:20px; width:100%; text-align:center;">
             <label for="powerSlider">Power:</label>
             <input type="range" id="powerSlider" min="1" max="10" value="10">

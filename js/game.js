@@ -11,6 +11,12 @@ let isMoving = false;
 let hasWon = false;
 let currentLevelIndex = 0;
 let currentObstacles = [];
+let playerName = '';
+
+function promptPlayerName() {
+    const name = prompt("Please enter your name:");
+    playerName = name ? name.trim() : "Anonymous";
+}
 
 function loadLevel() {
     const config = levels[currentLevelIndex];
@@ -37,16 +43,16 @@ function loadLevel() {
         height: obs.heightPercent * canvas.height,
         color: obs.color
     }));
+    // Always update leaderboard display on level load
+    renderLeaderboard('leaderboard');
 }
 
 export function initGame() {
+    // Ensure the player's name is obtained as soon as the game starts.
+    promptPlayerName();
     loadLevel();
-
-    // Removed hole picker event listener
-    // document.getElementById('holePicker').addEventListener('change', (event) => {
-    //     currentLevelIndex = parseInt(event.target.value);
-    //     loadLevel();
-    // });
+    // Ensure leaderboard is always rendered
+    renderLeaderboard('leaderboard');
 
     canvas.addEventListener('click', (event) => {
         if (!isMoving && ball.visible) {
@@ -65,12 +71,15 @@ export function initGame() {
     });
 
     document.getElementById('resetButton').addEventListener('click', () => {
+        // Restart and re-prompt player name on reset
+        promptPlayerName();
         currentLevelIndex = 0; // restart at level 1
         score = 0; // reset overall score for a new player
         // Removed resetting the hole picker value since it no longer exists
         loadLevel();
         isMoving = false;
-        document.getElementById('leaderboard').innerHTML = "";
+        // Instead of clearing, update the leaderboard
+        renderLeaderboard('leaderboard');
     });
 }
 
@@ -113,9 +122,9 @@ function update() {
                     currentLevelIndex++;
                     loadLevel();
                 } else {
-                    // Save final score and show leaderboard
-                    saveScore(score);
-                    alert('Congratulations! You completed all holes with a score of: ' + score);
+                    // Save final score with playerName and show leaderboard
+                    saveScore(score, playerName);
+                    alert('Congratulations ' + playerName + '! You completed all holes with a score of: ' + score);
                     renderLeaderboard('leaderboard');
                 }
             }, 100);
@@ -124,6 +133,8 @@ function update() {
             isMoving = false;
         }
     }
+    // Always update leaderboard (in case localStorage changed)
+    renderLeaderboard('leaderboard');
 }
 
 function drawObstacles() {
