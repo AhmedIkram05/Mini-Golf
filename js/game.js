@@ -43,6 +43,12 @@ export function initGame() {
     loadLevel();
     document.getElementById('score').textContent = 'Score: ' + score;
 
+    // HOLE PICKER event listener
+    document.getElementById('holePicker').addEventListener('change', (event) => {
+        currentLevelIndex = parseInt(event.target.value);
+        loadLevel();
+    });
+
     canvas.addEventListener('click', (event) => {
         if (!isMoving && ball.visible) {
             score++;
@@ -62,6 +68,7 @@ export function initGame() {
 
     document.getElementById('resetButton').addEventListener('click', () => {
         currentLevelIndex = 0; // restart at level 1
+        document.getElementById('holePicker').value = "0"; // Reset hole picker
         loadLevel();
         isMoving = false;
     });

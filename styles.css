@@ -56,6 +56,14 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
+#hole-picker {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    text-align: left;
+    margin: 0;
+}
+
 canvas {
     border: 2px solid #388e3c;
     border-radius: 10px;
@@ -85,14 +93,6 @@ h1 {
     width: 100%;
 }
 
-#par {
-    position: absolute;
-    top: 100px;
-    width: 100%;
-    text-align: center;
-    font-size: 24px;
-}
-
 #score {
     position: absolute;
     top: 140px;
@@ -100,3 +100,4 @@ h1 {
     text-align: center;
     font-size: 24px;
 }
+
