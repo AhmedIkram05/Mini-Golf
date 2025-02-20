@@ -3,9 +3,10 @@ export const hole = {
     y: 0,
     radius: 15,
     color: '#000000',
-    init: function(canvas) {
-        this.x = canvas.width / 4;
-        this.y = 50;
+    setConfig: function(canvas, config) {
+        this.x = config.holeXPercent * canvas.width;
+        this.y = config.holeYPercent * canvas.height;
+        this.color = config.holeColor;
     },
     draw: function(ctx) {
         ctx.beginPath();
