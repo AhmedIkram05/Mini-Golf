@@ -1,4 +1,4 @@
-# 2D Golf Game
+# 2D Mini-Golf Game
 
 Welcome to the 2D Golf Game project! This game allows you to play a simple golf game with a single hole. Below are the details on how to set up and play the game.
 
