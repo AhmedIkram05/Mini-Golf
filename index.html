@@ -4,30 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2D Golf Game</title>
+    
     <!-- Add Tailwind CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     
-    <!-- Add custom CSS styles -->
     <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-    <div id="game-container" class="relative w-full h-screen flex justify-center items-center">
-        <h1 class="absolute top-5 w-full text-center text-2xl">2D Mini Golf</h1>
-        <!-- Leaderboard positioned in top-left -->
-        <div id="leaderboard" class="absolute top-16 left-4 bg-white bg-opacity-90 p-3 rounded shadow-md max-w-xs"></div>
-        <!-- Current hole positioned below leaderboard -->
-        <div id="currentHole" class="absolute top-48 left-4 text-xl font-medium">Hole: 1</div>
-        <!-- NEW: Golf course container with lighter grass color -->
-        <div id="golf-course" class="relative w-[800px] h-[600px] bg-green-500 rounded-lg border-4 border-white overflow-hidden">
-            <canvas id="gameCanvas" width="800" height="600"></canvas>
-        </div>
-        <button id="resetButton" class="absolute top-5 right-5 bg-green-700 text-white py-3 px-4 rounded hover:bg-green-800">Reset Game</button>
-        <div id="score" class="absolute top-28 w-full text-center text-xl">Score: 0</div>
-        <div id="controls" class="absolute bottom-5 w-full text-center">
-            <label for="powerSlider" class="mr-2 text-lg">Power:</label>
-            <input type="range" id="powerSlider" min="1" max="10" value="10" class="w-1/2">
-        </div>
+    <div id="game-container" class="w-full h-screen flex flex-col bg-gray-100">
+        
+        <!-- Header -->
+        <header class="w-full flex items-center justify-between px-6 py-4 bg-green-100 shadow">
+            <h1 class="text-3xl font-medium">2D Mini Golf</h1>
+            <div class="flex items-center space-x-6">
+                <div id="score" class="text-xl">Score: 0</div>
+                <div id="currentHole" class="text-xl">Hole: 1</div>
+                <button id="resetButton" class="bg-green-700 text-white py-2 px-4 rounded hover:bg-green-800">Reset Game</button>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <main class="relative flex-grow flex justify-center items-center">
+            
+            <!-- Golf course container -->
+            <div id="golf-course" class="relative w-[800px] h-[600px] bg-green rounded-lg border-4 border-white overflow-hidden">
+                <canvas id="gameCanvas" width="800" height="600"></canvas>
+            </div>
+            
+            <!-- Vertical Power Slider positioned farther left from the golf course -->
+            <div id="verticalPowerSlider" class="absolute left-64 top-1/2 transform -translate-y-1/2 flex flex-col items-center">
+                <!-- Increased bottom margin to move text higher above the slider -->
+                <div class="mb-24 text-lg font-medium">Power</div>
+                <input type="range" id="powerSlider" min="1" max="10" value="10" class="transform -rotate-90 w-48">
+            </div>
+        </main>
+        
+        <!-- Leaderboard as a fixed sidebar on the right -->
+        <div id="leaderboard" class="fixed top-20 right-5 bg-white bg-opacity-90 p-4 rounded shadow-md max-w-xs"></div>
     </div>
     <script type="module" src="js/main.js"></script>
 </body>
