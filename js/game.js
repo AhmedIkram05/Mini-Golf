@@ -34,6 +34,8 @@ function loadLevel() {
     ball.visible = true;
     hasWon = false;
     document.getElementById('score').textContent = 'Score: ' + score;
+    // Update current hole display
+    document.getElementById('currentHole').textContent = 'Hole: ' + (currentLevelIndex + 1);
     
     // Build obstacles - convert relative percentages to absolute values.
     currentObstacles = config.obstacles.map(obs => ({
@@ -110,7 +112,6 @@ function update() {
     if (isMoving) {
         ball.update(canvas);
         checkObstacleCollisions();
-        // Check win condition
         const dist = Math.hypot(ball.x - hole.x, ball.y - hole.y);
         if (!hasWon && dist < ball.radius + hole.radius) {
             hasWon = true;
@@ -118,13 +119,14 @@ function update() {
             isMoving = false;
             setTimeout(() => {
                 if (currentLevelIndex < levels.length - 1) {
-                    alert('Hole complete! Your strokes: ' + score + '. Moving to next hole.');
+                    // Removed pop-up message
                     currentLevelIndex++;
                     loadLevel();
                 } else {
-                    // Save final score with playerName and show leaderboard
+                    // Save final score with playerName and update leaderboard
                     saveScore(score, playerName);
-                    alert('Congratulations ' + playerName + '! You completed all holes with a score of: ' + score);
+                    // Optionally show a final message (or remove it entirely)
+                    // alert('Congratulations ' + playerName + '! You completed all holes with a score of: ' + score);
                     renderLeaderboard('leaderboard');
                 }
             }, 100);
@@ -133,7 +135,6 @@ function update() {
             isMoving = false;
         }
     }
-    // Always update leaderboard (in case localStorage changed)
     renderLeaderboard('leaderboard');
 }
 
