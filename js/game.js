@@ -83,6 +83,19 @@ export function initGame() {
         // Instead of clearing, update the leaderboard
         renderLeaderboard('leaderboard');
     });
+
+    const powerSlider = document.getElementById('powerSlider');
+    powerSlider.addEventListener('input', function() {
+        const val = parseInt(this.value, 10);
+        const ratio = (val - 1) / 9; // Normalize value from 0 to 1 for slider values 1-10
+        const red = Math.round(255 * (1 - ratio));    // Highest red at low power
+        const green = Math.round(255 * ratio);          // Highest green at high power
+        const fillColor = `rgb(${red}, ${green}, 0)`;
+        // Compute fill percentage for gradient (e.g., value 1 => 10%, value 10 => 100%)
+        const fillPercent = (val / 10) * 100;
+        // Because the slider is rotated, use "to right" so that the gradient appears vertical.
+        this.style.background = `linear-gradient(to right, ${fillColor} ${fillPercent}%, #ccc ${fillPercent}%, #ccc 100%)`;
+    });
 }
 
 function checkObstacleCollisions() {
