@@ -34,8 +34,10 @@ function loadLevel() {
     ball.visible = true;
     hasWon = false;
     document.getElementById('score').textContent = 'Score: ' + score;
-    // Update current hole display
+    // Updated current hole display
     document.getElementById('currentHole').textContent = 'Hole: ' + (currentLevelIndex + 1);
+    // NEW: Update Par display
+    document.getElementById('par').textContent = 'Par: ' + config.par;
     
     // Build obstacles - convert relative percentages to absolute values.
     currentObstacles = config.obstacles.map(obs => ({
