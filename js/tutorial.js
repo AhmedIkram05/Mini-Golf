@@ -47,6 +47,12 @@ export function startTutorial() {
     ];
 
     function showTutorialStep(step) {
+        // Remove existing overlay if it exists
+        const existingOverlay = document.getElementById('tutorialOverlay');
+        if (existingOverlay) {
+            document.body.removeChild(existingOverlay);
+        }
+        
         const tutorialOverlay = document.createElement('div');
         tutorialOverlay.id = 'tutorialOverlay';
         tutorialOverlay.className = 'fixed inset-0 z-40 pointer-events-none';
@@ -56,12 +62,17 @@ export function startTutorial() {
             position = 'flex items-center justify-center';
         } else if (step.position === 'ball') {
             // Position near the ball
+            position = 'flex items-center justify-center'; // Default to center for now
         } else if (step.position === 'hole') {
             // Position near the hole
+            position = 'flex items-center justify-center'; // Default to center for now
         } else if (step.position === 'slider') {
             position = 'flex items-center justify-start ml-20';
         } else if (step.position === 'par') {
             position = 'flex items-start justify-center pt-20';
+        } else {
+            // Default to center
+            position = 'flex items-center justify-center';
         }
         
         tutorialOverlay.innerHTML = `
@@ -83,9 +94,9 @@ export function startTutorial() {
         
         document.body.appendChild(tutorialOverlay);
         
+        // Add event listeners after the element is in the DOM
         if (currentStep > 0) {
             document.getElementById('prevTutorialStep').addEventListener('click', () => {
-                document.body.removeChild(tutorialOverlay);
                 currentStep--;
                 showTutorialStep(tutorialSteps[currentStep]);
             });
@@ -93,7 +104,6 @@ export function startTutorial() {
         
         if (currentStep < tutorialSteps.length - 1) {
             document.getElementById('nextTutorialStep').addEventListener('click', () => {
-                document.body.removeChild(tutorialOverlay);
                 currentStep++;
                 showTutorialStep(tutorialSteps[currentStep]);
             });

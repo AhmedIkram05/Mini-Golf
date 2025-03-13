@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Mini Golf - Achievements</title>
+    
+    <!-- Add Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <header class="flex items-center justify-between mb-8">
+            <div class="flex items-center">
+                <a href="index.html" class="mr-4 text-red-700 hover:text-red-900">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </a>
+                <h1 class="text-3xl font-bold text-gray-800">Achievements</h1>
+            </div>
+        </header>
+        
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-bold mb-4 text-red-700">Your Achievements</h2>
+            <p class="text-gray-600 mb-4">Unlock achievements as you play Mini Golf. Complete special challenges to earn them all!</p>
+            
+            <div id="achievementsList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Achievements will be loaded here -->
+                <div class="p-3 bg-gray-100 rounded-lg flex items-center opacity-60">
+                    <span class="text-2xl mr-3">🔄</span>
+                    <div>
+                        <div class="font-medium">Loading achievements...</div>
+                        <div class="text-sm">Please wait</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-bold mb-4 text-red-700">Achievement Statistics</h2>
+            
+            <div class="bg-red-50 rounded-lg p-4 mb-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="font-medium text-gray-800">Your Progress</h3>
+                        <p class="text-gray-600">Keep playing to earn more achievements!</p>
+                    </div>
+                    <div>
+                        <div id="achievementProgress" class="text-3xl font-bold text-red-600">0%</div>
+                    </div>
+                </div>
+                
+                <div class="mt-4 h-4 bg-gray-200 rounded-full overflow-hidden">
+                    <div id="achievementProgressBar" class="h-full bg-red-600" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <p class="text-gray-600 text-sm">Achievement data is stored locally in your browser.</p>
+        </div>
+    </div>
+    
+    <script type="module">
+        import { achievements } from './js/achievements.js';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize achievements
+            achievements.init();
+            
+            // Render all achievements in the list
+            const achievementsListEl = document.getElementById('achievementsList');
+            if (achievementsListEl) {
+                let html = '';
+                let earnedCount = 0;
+                
+                achievements.list.forEach(achievement => {
+                    if (achievement.earned) {
+                        earnedCount++;
+                    }
+                    
+                    // Skip secret achievements that haven't been earned yet
+                    if (achievement.secret && !achievement.earned) {
+                        html += `
+                            <div class="p-3 bg-gray-100 rounded-lg flex items-center opacity-50">
+                                <span class="text-2xl mr-3">?</span>
+                                <div>
+                                    <div class="font-medium">Secret Achievement</div>
+                                    <div class="text-sm">Keep playing to discover</div>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        const bgColor = achievement.earned ? 'bg-red-100' : 'bg-gray-100';
+                        const textColor = achievement.earned ? 'text-red-800' : 'text-gray-600';
+                        const opacity = achievement.earned ? 'opacity-100' : 'opacity-60';
+                        
+                        html += `
+                            <div class="p-3 ${bgColor} rounded-lg flex items-center ${opacity}">
+                                <span class="text-2xl mr-3">${achievement.icon}</span>
+                                <div>
+                                    <div class="font-medium ${textColor}">${achievement.name}</div>
+                                    <div class="text-sm">${achievement.description}</div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                
+                achievementsListEl.innerHTML = html;
+                
+                // Update progress
+                const totalAchievements = achievements.list.length;
+                const progressPercent = Math.round((earnedCount / totalAchievements) * 100);
+                
+                document.getElementById('achievementProgress').textContent = `${progressPercent}%`;
+                document.getElementById('achievementProgressBar').style.width = `${progressPercent}%`;
+            }
+        });
+    </script>
+</body>
+</html>
