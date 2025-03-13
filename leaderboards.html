@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Mini Golf - Leaderboards</title>
+    
+    <!-- Add Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <header class="flex items-center justify-between mb-8">
+            <div class="flex items-center">
+                <a href="index.html" class="mr-4 text-purple-700 hover:text-purple-900">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </a>
+                <h1 class="text-3xl font-bold text-gray-800">Leaderboards</h1>
+            </div>
+        </header>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Top Scores -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-bold mb-4 text-purple-700">Top Scores</h2>
+                <div class="overflow-auto max-h-96">
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr class="bg-purple-50">
+                                <th class="px-4 py-2 text-left">Rank</th>
+                                <th class="px-4 py-2 text-left">Player</th>
+                                <th class="px-4 py-2 text-left">Score</th>
+                                <th class="px-4 py-2 text-left">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboardTable">
+                            <tr>
+                                <td class="px-4 py-2" colspan="4">Loading scores...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Player Statistics -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-bold mb-4 text-purple-700">Player Statistics</h2>
+                <div class="overflow-auto max-h-96">
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr class="bg-purple-50">
+                                <th class="px-4 py-2 text-left">Player</th>
+                                <th class="px-4 py-2 text-left">Best Score</th>
+                                <th class="px-4 py-2 text-left">Games</th>
+                                <th class="px-4 py-2 text-left">Hole-in-ones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="statsTable">
+                            <tr>
+                                <td class="px-4 py-2" colspan="4">Loading statistics...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Records -->
+        <div class="mt-8 bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-bold mb-4 text-purple-700">Recent Games</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="bg-purple-50">
+                            <th class="px-4 py-2 text-left">Player</th>
+                            <th class="px-4 py-2 text-left">Score</th>
+                            <th class="px-4 py-2 text-left">vs Par</th>
+                            <th class="px-4 py-2 text-left">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentGamesTable">
+                        <tr>
+                            <td class="px-4 py-2" colspan="4">Loading recent games...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module">
+        import { getLeaderboard } from './js/leaderboard.js';
+        import { getPlayerStats } from './js/statistics.js';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load leaderboard data
+            const leaderboard = getLeaderboard();
+            const leaderboardTable = document.getElementById('leaderboardTable');
+            
+            if (leaderboardTable) {
+                if (leaderboard.length === 0) {
+                    leaderboardTable.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="px-4 py-2 text-gray-500">No scores recorded yet.</td>
+                        </tr>
+                    `;
+                } else {
+                    leaderboardTable.innerHTML = leaderboard.map((entry, index) => `
+                        <tr class="${index < 3 ? 'bg-purple-50' : ''}">
+                            <td class="px-4 py-2 font-medium">${index + 1}</td>
+                            <td class="px-4 py-2">${entry.name}</td>
+                            <td class="px-4 py-2">${entry.score}</td>
+                            <td class="px-4 py-2">${entry.date}</td>
+                        </tr>
+                    `).join('');
+                }
+            }
+            
+            // Load player statistics
+            const stats = getPlayerStats();
+            const statsTable = document.getElementById('statsTable');
+            
+            if (statsTable) {
+                if (stats.length === 0) {
+                    statsTable.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="px-4 py-2 text-gray-500">No player statistics available.</td>
+                        </tr>
+                    `;
+                } else {
+                    statsTable.innerHTML = stats.map((player) => `
+                        <tr>
+                            <td class="px-4 py-2">${player.name}</td>
+                            <td class="px-4 py-2">${player.bestScore}</td>
+                            <td class="px-4 py-2">${player.gamesPlayed}</td>
+                            <td class="px-4 py-2">${player.totalHoleInOne || 0}</td>
+                        </tr>
+                    `).join('');
+                }
+            }
+            
+            // Load recent games data
+            const recentGamesTable = document.getElementById('recentGamesTable');
+            
+            if (recentGamesTable) {
+                if (stats.length === 0) {
+                    recentGamesTable.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="px-4 py-2 text-gray-500">No recent games available.</td>
+                        </tr>
+                    `;
+                } else {
+                    // Sort by most recent
+                    const recentGames = [...stats].sort((a, b) => {
+                        const dateA = new Date(a.lastPlayed || 0);
+                        const dateB = new Date(b.lastPlayed || 0);
+                        return dateB - dateA;
+                    }).slice(0, 10); // Last 10 games
+                    
+                    recentGamesTable.innerHTML = recentGames.map((player) => `
+                        <tr>
+                            <td class="px-4 py-2">${player.name}</td>
+                            <td class="px-4 py-2">${player.lastScore || '-'}</td>
+                            <td class="px-4 py-2">${
+                                player.lastParDifference > 0 
+                                    ? `+${player.lastParDifference}` 
+                                    : player.lastParDifference === 0 
+                                        ? 'Even' 
+                                        : player.lastParDifference
+                            }</td>
+                            <td class="px-4 py-2">${player.lastPlayed || '-'}</td>
+                        </tr>
+                    `).join('');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

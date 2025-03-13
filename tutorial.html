@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Mini Golf - Tutorial</title>
+    
+    <!-- Add Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .tutorial-step {
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .tutorial-step.active {
+            transform: translateY(0);
+            opacity: 1;
+            display: block; /* Ensure active step is visible */
+        }
+        
+        .tutorial-step:not(.active) {
+            transform: translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+            display: none; /* Hide inactive steps completely */
+        }
+        
+        /* Add placeholder for missing images */
+        .tutorial-image-placeholder {
+            width: 100%;
+            height: 200px;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <header class="flex items-center justify-between mb-8">
+            <div class="flex items-center">
+                <a href="index.html" class="mr-4 text-teal-700 hover:text-teal-900">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </a>
+                <h1 class="text-3xl font-bold text-gray-800">Tutorial</h1>
+            </div>
+        </header>
+        
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex justify-between mb-6">
+                <h2 class="text-xl font-bold text-teal-700">How to Play Mini Golf</h2>
+                <div>
+                    <span id="currentStep">1</span>/<span id="totalSteps">7</span>
+                </div>
+            </div>
+            
+            <!-- Tutorial Steps -->
+            <div class="tutorial-steps">
+                <!-- Step 1 -->
+                <div id="step-1" class="tutorial-step active">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-teal-100 rounded-full w-10 h-10 flex items-center justify-center mr-3">
+                            <span class="text-teal-800 font-bold">1</span>
+                        </div>
+                        <h3 class="text-lg font-medium">Welcome to Mini Golf!</h3>
+                    </div>
+                    <p class="mb-4">Mini Golf is a simple yet challenging game where your goal is to get the ball into the hole with as few strokes as possible.</p>
+                    <div class="bg-gray-100 rounded-lg p-4 flex justify-center">
+                        <div class="tutorial-image-placeholder">
+                            <p class="text-gray-500 text-center">Game Overview</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 2 -->
+                <div id="step-2" class="tutorial-step">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-teal-100 rounded-full w-10 h-10 flex items-center justify-center mr-3">
+                            <span class="text-teal-800 font-bold">2</span>
+                        </div>
+                        <h3 class="text-lg font-medium">Aiming and Shooting</h3>
+                    </div>
+                    <p class="mb-4">To aim, move your cursor in the direction you want to hit the ball. The white line shows your aim direction.</p>
+                    <div class="bg-gray-100 rounded-lg p-4 flex justify-center">
+                        <div class="tutorial-image-placeholder">
+                            <p class="text-gray-500 text-center">Aiming the ball</p>
+                        </div>
+                    </div>
+                    <p class="mt-4">Click to hit the ball. The power of your shot is determined by the power slider on the left.</p>
+                </div>
+                
+                <!-- Step 3 -->
+                <div id="step-3" class="tutorial-step">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-teal-100 rounded-full w-10 h-10 flex items-center justify-center mr-3">
+                            <span class="text-teal-800 font-bold">3</span>
+                        </div>
+                        <h3 class="text-lg font-medium">Power Control</h3>
+                    </div>
+                    <p class="mb-4">Use the power slider on the left to control how hard you hit the ball. Higher values will make the ball travel farther.</p>
+                    <div class="bg-gray-100 rounded-lg p-4 flex justify-center">
+                        <div class="tutorial-image-placeholder">
+                            <p class="text-gray-500 text-center">Power slider</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 4 -->
+                <div id="step-4" class="tutorial-step">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-teal-100 rounded-full w-10 h-10 flex items-center justify-center mr-3">
+                            <span class="text-teal-800 font-bold">4</span>
+                        </div>
+                        <h3 class="text-lg font-medium">Obstacles and Hazards</h3>
+                    </div>
+                    <p class="mb-4">The course contains various obstacles and hazards:</p>
+                    <ul class="list-disc pl-6 mb-4">
+                        <li class="mb-2"><span class="font-medium">Walls</span> - Bounce off walls to reach the hole</li>
+                        <li class="mb-2"><span class="font-medium">Water hazards</span> - Avoid these! Your ball will reset to the starting position with a penalty stroke</li>
+                        <li class="mb-2"><span class="font-medium">Sand bunkers</span> - These slow down your ball considerably</li>
+                    </ul>
+                    <div class="bg-gray-100 rounded-lg p-4 flex justify-center">
+                        <div class="tutorial-image-placeholder">
+                            <p class="text-gray-500 text-center">Course obstacles</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 5 -->
+                <div id="step-5" class="tutorial-step">
+                    <div class="flex items-center mb-4">
+                        <div class "bg-teal-100 rounded-full w-10 h-10 flex items-center justify-center mr-3">
+                            <span class="text-teal-800 font-bold">5</span>
+                        </div>
+                        <h3 class="text-lg font-medium">Scoring</h3>
+                    </div>
+                    <p class="mb-4">Each level has a target "par" score. Your goal is to complete the hole in par or better.</p>
+                    <ul class="mb-4">
+                        <li><strong>Birdie</strong>: One under par</li>
+                        <li><strong>Eagle</strong>: Two under par</li>
+                        <li><strong>Bogey</strong>: One over par</li>
+                    </ul>
+                    <div class="bg-gray-100 rounded-lg p-4 flex justify-center">
+                        <div class="tutorial-image-placeholder">
+                            <p class="text-gray-500 text-center">Scoring</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 6 -->
+                <div id="step-6" class="tutorial-step">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-teal-100 rounded-full w-10 h-10 flex items-center justify-center mr-3">
+                            <span class="text-teal-800 font-bold">6</span>
+                        </div>
+                        <h3 class="text-lg font-medium">Power-ups</h3>
+                    </div>
+                    <p class="mb-4">Some levels contain special power-ups that can help (or challenge) your game:</p>
+                    <ul class="list-disc pl-6 mb-4">
+                        <li class="mb-2"><span class="font-medium">Speed Boost</span> - Increases your ball's speed</li>
+                        <li class="mb-2"><span class="font-medium">Perfect Aim</span> - Shows trajectory prediction</li>
+                        <li class="mb-2"><span class="font-medium">Ghost Ball</span> - Pass through obstacles temporarily</li>
+                    </ul>
+                    <div class="bg-gray-100 rounded-lg p-4 flex justify-center">
+                        <div class="tutorial-image-placeholder">
+                            <p class="text-gray-500 text-center">Power-ups</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Step 7 -->
+                <div id="step-7" class="tutorial-step">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-teal-100 rounded-full w-10 h-10 flex items-center justify-center mr-3">
+                            <span class="text-teal-800 font-bold">7</span>
+                        </div>
+                        <h3 class="text-lg font-medium">Game Modes</h3>
+                    </div>
+                    <p class="mb-4">Mini Golf offers several game modes:</p>
+                    <ul class="list-disc pl-6 mb-4">
+                        <li class="mb-2"><span class="font-medium">Single Player</span> - Play through a full course of 10 holes</li>
+                        <li class="mb-2"><span class="font-medium">Multiplayer</span> - Challenge friends and take turns</li>
+                        <li class="mb-2"><span class="font-medium">Level Editor</span> - Create your own custom courses</li>
+                    </ul>
+                    <div class="bg-teal-50 rounded-lg p-4 border border-teal-200">
+                        <p class="text-center font-medium text-teal-800">You're ready to play! Have fun!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Navigation buttons -->
+            <div class="flex justify-between mt-6">
+                <button id="prevBtn" class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed" disabled>Previous</button>
+                <button id="nextBtn" class="bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700">Next</button>
+            </div>
+        </div>
+        
+        <div class="text-center mb-8">
+            <a href="single-player.html" class="inline-block bg-teal-600 text-white py-3 px-6 rounded-lg hover:bg-teal-700">Start Playing</a>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const totalSteps = document.querySelectorAll('.tutorial-step').length;
+            document.getElementById('totalSteps').textContent = totalSteps;
+            
+            let currentStep = 1;
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            function updateStep() {
+                // Hide all steps
+                document.querySelectorAll('.tutorial-step').forEach(step => {
+                    step.classList.remove('active');
+                });
+                
+                // Show current step
+                document.getElementById(`step-${currentStep}`).classList.add('active');
+                document.getElementById('currentStep').textContent = currentStep;
+                
+                // Update button states
+                prevBtn.disabled = currentStep === 1;
+                if (currentStep === totalSteps) {
+                    nextBtn.textContent = "Finish";
+                } else {
+                    nextBtn.textContent = "Next";
+                }
+                
+                // Set tutorial as completed in localStorage
+                localStorage.setItem('tutorialComplete', 'true');
+            }
+            
+            prevBtn.addEventListener('click', function() {
+                if (currentStep > 1) {
+                    currentStep--;
+                    updateStep();
+                }
+            });
+            
+            nextBtn.addEventListener('click', function() {
+                if (currentStep < totalSteps) {
+                    currentStep++;
+                    updateStep();
+                } else {
+                    window.location.href = 'single-player.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
