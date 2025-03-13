@@ -1,4 +1,4 @@
-import { initGame, gameLoop, setMute, customizeBall } from './game.js';
+import { initGame, gameLoop, setMute, customizeBall, startMultiplayerGame } from './game.js';
 import { renderStatsPanel } from './statistics.js';
 import { startTutorial } from './tutorial.js';
 import { achievements } from './achievements.js';
@@ -45,10 +45,12 @@ if (!localStorage.getItem('tutorialComplete')) {
     // Add tutorial button to main menu
     const tutorialBtn = document.createElement('button');
     tutorialBtn.id = 'tutorialBtn';
-    tutorialBtn.className = 'bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600 ml-4';
+    tutorialBtn.className = 'bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600 mr-4';
     tutorialBtn.textContent = 'Tutorial';
     
-    document.querySelector('.fixed.bottom-5').appendChild(tutorialBtn);
+    // Insert tutorial button before the first child of the game controls div
+    const controlsContainer = document.querySelector('.fixed.bottom-6.left-1\\/2');
+    controlsContainer.insertBefore(tutorialBtn, controlsContainer.firstChild);
     
     document.getElementById('tutorialBtn').addEventListener('click', () => {
         startTutorial();
@@ -56,14 +58,12 @@ if (!localStorage.getItem('tutorialComplete')) {
 }
 
 // Add event listener for mute button
-if (document.getElementById('muteBtn')) {
-    document.getElementById('muteBtn').addEventListener('click', function() {
-        // Update the mute status and icon
-        const isMuted = this.textContent === '🔊';
-        this.textContent = isMuted ? '🔇' : '🔊';
-        setMute(isMuted);
-    });
-}
+document.getElementById('muteBtn').addEventListener('click', function() {
+    // Update the mute status and icon
+    const isMuted = this.textContent === '🔊';
+    this.textContent = isMuted ? '🔇' : '🔊';
+    setMute(isMuted);
+});
 
 // Add event listener for customize button
 if (document.getElementById('customizeBtn')) {
@@ -116,9 +116,42 @@ if (document.getElementById('customizeBtn')) {
     });
 }
 
-// Add event listener for editor button (if present)
-if (document.getElementById('editorBtn')) {
-    document.getElementById('editorBtn').addEventListener('click', () => {
-        window.location.href = 'editor.html';
+// Add event listener for editor button
+document.getElementById('editorBtn').addEventListener('click', () => {
+    window.location.href = 'editor.html';
+});
+
+// Add event listener for multiplayer button
+document.getElementById('multiplayerBtn').addEventListener('click', () => {
+    const playerCountModal = document.createElement('div');
+    playerCountModal.className = 'fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-30';
+    playerCountModal.innerHTML = `
+        <div class="bg-white p-6 rounded-lg max-w-md">
+            <h2 class="text-2xl font-bold mb-4">Multiplayer Mode</h2>
+            <p class="mb-4">Select number of players:</p>
+            <div class="flex justify-center space-x-4 mb-4">
+                <button class="player-count bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700" data-count="2">2 Players</button>
+                <button class="player-count bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700" data-count="3">3 Players</button>
+                <button class="player-count bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700" data-count="4">4 Players</button>
+            </div>
+            <div class="text-right">
+                <button id="cancelMultiplayerBtn" class="bg-gray-500 text-white py-1 px-3 rounded hover:bg-gray-600">Cancel</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(playerCountModal);
+    
+    // Add event listeners to player count buttons
+    playerCountModal.querySelectorAll('.player-count').forEach(button => {
+        button.addEventListener('click', () => {
+            const count = parseInt(button.getAttribute('data-count'), 10);
+            document.body.removeChild(playerCountModal);
+            startMultiplayerGame(count);
+        });
     });
-}
+    
+    // Add event listener to cancel button
+    document.getElementById('cancelMultiplayerBtn').addEventListener('click', () => {
+        document.body.removeChild(playerCountModal);
+    });
+});

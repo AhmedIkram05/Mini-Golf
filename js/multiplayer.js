@@ -4,10 +4,12 @@ export const multiplayer = {
     players: [],
     currentPlayerIndex: 0,
     maxPlayers: 4,
+    levelStrokes: 0, // Track strokes for current level
     
     init() {
         this.players = [];
         this.currentPlayerIndex = 0;
+        this.levelStrokes = 0;
     },
     
     addPlayer(name, ballColor) {
@@ -32,6 +34,7 @@ export const multiplayer = {
     },
     
     nextPlayer() {
+        this.levelStrokes = 0; // Reset strokes counter for next player
         this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.players.length;
         return this.getCurrentPlayer();
     },
@@ -52,5 +55,11 @@ export const multiplayer = {
             score: p.score,
             levelScores: p.levelScores
         })).sort((a, b) => a.score - b.score);
+    },
+    
+    // New method to reset strokes for a new hole
+    resetForNewHole() {
+        this.currentPlayerIndex = 0;
+        this.levelStrokes = 0;
     }
 };

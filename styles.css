@@ -3,6 +3,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
+    overflow: hidden; /* Prevent scrollbars */
 }
 
 /* Power slider customization */
@@ -35,6 +36,14 @@ body {
     cursor: pointer;
 }
 
+/* Fix power slider positioning */
+#verticalPowerSlider {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+}
+
 /* Canvas border */
 #gameCanvas {
     display: block;
@@ -53,4 +62,43 @@ body {
 
 #leaderboard li {
     margin-bottom: 8px;
+}
+
+/* Scrollbar customization for panels */
+#leaderboard::-webkit-scrollbar,
+#stats::-webkit-scrollbar,
+#achievements::-webkit-scrollbar {
+    width: 6px;
+}
+
+#leaderboard::-webkit-scrollbar-thumb,
+#stats::-webkit-scrollbar-thumb,
+#achievements::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+#leaderboard::-webkit-scrollbar-thumb:hover,
+#stats::-webkit-scrollbar-thumb:hover,
+#achievements::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 1400px) {
+    #verticalPowerSlider {
+        left: 260px !important;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    #verticalPowerSlider {
+        left: 220px !important;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    #verticalPowerSlider {
+        left: 180px !important;
+    }
 }
