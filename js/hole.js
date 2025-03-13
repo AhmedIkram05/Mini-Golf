@@ -6,6 +6,7 @@ export const hole = {
     setConfig: function(canvas, config) {
         this.x = config.holeXPercent * canvas.width;
         this.y = config.holeYPercent * canvas.height;
+        this.radius = config.holeRadius;  // update the radius based on config
         this.color = config.holeColor;
     },
     draw: function(ctx) {

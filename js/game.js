@@ -6,12 +6,20 @@ import { saveScore, renderLeaderboard } from './leaderboard.js';
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
+// Remove the global hitSound/holeSound retrieval.
+
 let score = 0;
 let isMoving = false;
 let hasWon = false;
 let currentLevelIndex = 0;
 let currentObstacles = [];
 let playerName = '';
+
+// Replace previous playSound implementation with:
+function playSound(src) {
+    const sound = new Audio(src);
+    sound.play().catch(e => console.error(`Error playing ${src}:`, e));
+}
 
 function promptPlayerName() {
     const name = prompt("Please enter your name:");
@@ -60,6 +68,8 @@ export function initGame() {
 
     canvas.addEventListener('click', (event) => {
         if (!isMoving && ball.visible) {
+            // Play hit sound immediately when the ball is struck.
+            playSound("sounds/hit.wav");
             score++;
             document.getElementById('score').textContent = 'Score: ' + score;
             const rect = canvas.getBoundingClientRect();
@@ -119,6 +129,8 @@ function checkObstacleCollisions() {
             // Adjust ball position slightly to prevent sticking
             ball.x += Math.cos(ball.angle) * ball.radius;
             ball.y += Math.sin(ball.angle) * ball.radius;
+            // Removed collision sound:
+            // playSound("sounds/hit.wav");
         }
     });
 }
@@ -132,16 +144,14 @@ function update() {
             hasWon = true;
             ball.visible = false;
             isMoving = false;
+            // Play holed sound immediately
+            playSound("sounds/hole.mp3");
             setTimeout(() => {
                 if (currentLevelIndex < levels.length - 1) {
-                    // Removed pop-up message
                     currentLevelIndex++;
                     loadLevel();
                 } else {
-                    // Save final score with playerName and update leaderboard
                     saveScore(score, playerName);
-                    // Optionally show a final message (or remove it entirely)
-                    // alert('Congratulations ' + playerName + '! You completed all holes with a score of: ' + score);
                     renderLeaderboard('leaderboard');
                 }
             }, 100);
