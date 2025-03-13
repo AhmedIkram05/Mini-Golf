@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Golf - Level Editor</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        .editor-tool.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .editor-canvas-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            margin: 0 auto;
+            border: 4px solid #2d6a4f;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <header class="mb-8">
+            <h1 class="text-3xl font-bold text-center">Mini Golf Level Editor</h1>
+            <div class="text-center mt-2">
+                <a href="index.html" class="text-blue-600 hover:underline">← Back to Game</a>
+            </div>
+        </header>
+        
+        <div class="editor-tools flex justify-center space-x-4 mb-4">
+            <button id="selectTool" class="editor-tool bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded active">Select</button>
+            <button id="obstacleTool" class="editor-tool bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded">Obstacle</button>
+            <button id="waterTool" class="editor-tool bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded">Water</button>
+            <button id="startTool" class="editor-tool bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded">Start Point</button>
+            <button id="holeTool" class="editor-tool bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded">Hole</button>
+        </div>
+        
+        <div class="editor-canvas-container">
+            <canvas id="editorCanvas" width="800" height="600"></canvas>
+        </div>
+        
+        <div class="flex justify-center space-x-4 mt-6">
+            <button id="clearLevel" class="bg-red-500 text-white hover:bg-red-600 px-6 py-2 rounded">Clear</button>
+            <button id="testLevel" class="bg-yellow-500 text-white hover:bg-yellow-600 px-6 py-2 rounded">Test Level</button>
+            <button id="saveLevel" class="bg-blue-600 text-white hover:bg-blue-700 px-6 py-2 rounded">Save Level</button>
+        </div>
+        
+        <div class="level-settings mt-8">
+            <h2 class="text-xl font-bold mb-4">Level Settings</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="form-group">
+                    <label class="block text-sm font-medium mb-1">Level Name</label>
+                    <input id="levelName" type="text" class="w-full px-3 py-2 border border-gray-300 rounded" value="Custom Level">
+                </div>
+                <div class="form-group">
+                    <label class="block text-sm font-medium mb-1">Par</label>
+                    <input id="levelPar" type="number" class="w-full px-3 py-2 border border-gray-300 rounded" min="1" max="10" value="3">
+                </div>
+                <div class="form-group">
+                    <label class="block text-sm font-medium mb-1">Background Color</label>
+                    <input id="bgColor" type="color" class="w-full px-3 py-2 border border-gray-300 rounded h-10" value="#69b578">
+                </div>
+                <div class="form-group">
+                    <label class="block text-sm font-medium mb-1">Border Color</label>
+                    <input id="borderColor" type="color" class="w-full px-3 py-2 border border-gray-300 rounded h-10" value="#2d6a4f">
+                </div>
+            </div>
+        </div>
+        
+        <div class="my-levels mt-8">
+            <h2 class="text-xl font-bold mb-4">My Levels</h2>
+            <div id="savedLevelsList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <!-- Saved levels will be loaded here -->
+            </div>
+        </div>
+    </div>
+    
+    <script type="module">
+        import { levelEditor } from './js/levelEditor.js';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize level editor
+            levelEditor.init(document.getElementById('editorCanvas'));
+            
+            // Load saved levels
+            const savedLevels = JSON.parse(localStorage.getItem('customGolfLevels')) || [];
+            const levelsList = document.getElementById('savedLevelsList');
+            
+            if (savedLevels.length === 0) {
+                levelsList.innerHTML = '<p class="text-gray-500 col-span-3">No custom levels saved yet. Create and save a level to see it here.</p>';
+            } else {
+                levelsList.innerHTML = '';
+                savedLevels.forEach((level, index) => {
+                    const levelCard = document.createElement('div');
+                    levelCard.className = 'bg-white p-4 rounded shadow';
+                    levelCard.innerHTML = `
+                        <h3 class="font-bold">${level.name}</h3>
+                        <p class="text-sm">Par: ${level.par}</p>
+                        <div class="mt-2 flex justify-between">
+                            <button class="text-blue-600 hover:underline load-level" data-index="${index}">Edit</button>
+                            <button class="text-red-600 hover:underline delete-level" data-index="${index}">Delete</button>
+                        </div>
+                    `;
+                    levelsList.appendChild(levelCard);
+                });
+                
+                // Add event listeners to load buttons
+                document.querySelectorAll('.load-level').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        levelEditor.loadLevel(savedLevels[index]);
+                    });
+                });
+                
+                // Add event listeners to delete buttons
+                document.querySelectorAll('.delete-level').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        if (confirm('Are you sure you want to delete this level?')) {
+                            const index = parseInt(this.getAttribute('data-index'));
+                            savedLevels.splice(index, 1);
+                            localStorage.setItem('customGolfLevels', JSON.stringify(savedLevels));
+                            // Reload page to update the list
+                            location.reload();
+                        }
+                    });
+                });
+            }
+            
+            // Update settings inputs
+            document.getElementById('levelName').addEventListener('change', function() {
+                levelEditor.currentLevel.name = this.value;
+            });
+            
+            document.getElementById('levelPar').addEventListener('change', function() {
+                levelEditor.currentLevel.par = parseInt(this.value);
+            });
+            
+            document.getElementById('bgColor').addEventListener('change', function() {
+                levelEditor.currentLevel.theme.background = this.value;
+                levelEditor.draw();
+            });
+            
+            document.getElementById('borderColor').addEventListener('change', function() {
+                levelEditor.currentLevel.theme.borderColor = this.value;
+                document.querySelector('.editor-canvas-container').style.borderColor = this.value;
+            });
+        });
+    </script>
+</body>
+</html>

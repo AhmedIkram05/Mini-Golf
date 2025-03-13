@@ -1,0 +1,56 @@
+/* Main game styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Power slider customization */
+#powerSlider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 10px;
+    border-radius: 5px;
+    outline: none;
+    background: linear-gradient(to right, rgb(255, 0, 0) 10%, #ccc 10%, #ccc 100%);
+}
+
+#powerSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid #333;
+    cursor: pointer;
+}
+
+#powerSlider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid #333;
+    cursor: pointer;
+}
+
+/* Canvas border */
+#gameCanvas {
+    display: block;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Leaderboard styling */
+#leaderboard {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+#leaderboard ol {
+    padding-left: 20px;
+}
+
+#leaderboard li {
+    margin-bottom: 8px;
+}
