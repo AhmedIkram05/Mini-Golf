@@ -6,7 +6,9 @@ import { saveScore, renderLeaderboard } from './leaderboard.js';
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// Remove the global hitSound/holeSound retrieval.
+// Add audio elements
+const hitSound = document.getElementById('hitSound');
+const holeSound = document.getElementById('holeSound');
 
 let score = 0;
 let isMoving = false;
@@ -15,10 +17,14 @@ let currentLevelIndex = 0;
 let currentObstacles = [];
 let playerName = '';
 
-// Replace previous playSound implementation with:
-function playSound(src) {
-    const sound = new Audio(src);
-    sound.play().catch(e => console.error(`Error playing ${src}:`, e));
+function playSound(soundElement) {
+    if (soundElement) {
+        soundElement.currentTime = 0;
+        const playPromise = soundElement.play();
+        if (playPromise) {
+            playPromise.catch(e => console.error("Error playing sound:", e));
+        }
+    }
 }
 
 function promptPlayerName() {
@@ -68,8 +74,7 @@ export function initGame() {
 
     canvas.addEventListener('click', (event) => {
         if (!isMoving && ball.visible) {
-            // Play hit sound immediately when the ball is struck.
-            playSound("sounds/hit.wav");
+            playSound(hitSound);
             score++;
             document.getElementById('score').textContent = 'Score: ' + score;
             const rect = canvas.getBoundingClientRect();
@@ -140,12 +145,12 @@ function update() {
         ball.update(canvas);
         checkObstacleCollisions();
         const dist = Math.hypot(ball.x - hole.x, ball.y - hole.y);
-        if (!hasWon && dist < ball.radius + hole.radius) {
+        // Increase detection radius significantly
+        if (!hasWon && dist < ball.radius + hole.radius + 15) {
             hasWon = true;
             ball.visible = false;
             isMoving = false;
-            // Play holed sound immediately
-            playSound("sounds/hole.mp3");
+
             setTimeout(() => {
                 if (currentLevelIndex < levels.length - 1) {
                     currentLevelIndex++;
@@ -154,6 +159,8 @@ function update() {
                     saveScore(score, playerName);
                     renderLeaderboard('leaderboard');
                 }
+                 // Play holed sound after the level loads or the game ends
+                playSound(holeSound);
             }, 100);
         }
         if (ball.speed < 0.1) {
