@@ -6,12 +6,26 @@ import { saveScore, renderLeaderboard } from './leaderboard.js';
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
+// Add audio elements
+const hitSound = document.getElementById('hitSound');
+const holeSound = document.getElementById('holeSound');
+
 let score = 0;
 let isMoving = false;
 let hasWon = false;
 let currentLevelIndex = 0;
 let currentObstacles = [];
 let playerName = '';
+
+function playSound(soundElement) {
+    if (soundElement) {
+        soundElement.currentTime = 0;
+        const playPromise = soundElement.play();
+        if (playPromise) {
+            playPromise.catch(e => console.error("Error playing sound:", e));
+        }
+    }
+}
 
 function promptPlayerName() {
     const name = prompt("Please enter your name:");
@@ -60,6 +74,7 @@ export function initGame() {
 
     canvas.addEventListener('click', (event) => {
         if (!isMoving && ball.visible) {
+            playSound(hitSound);
             score++;
             document.getElementById('score').textContent = 'Score: ' + score;
             const rect = canvas.getBoundingClientRect();
@@ -119,6 +134,8 @@ function checkObstacleCollisions() {
             // Adjust ball position slightly to prevent sticking
             ball.x += Math.cos(ball.angle) * ball.radius;
             ball.y += Math.sin(ball.angle) * ball.radius;
+            // Removed collision sound:
+            // playSound("sounds/hit.wav");
         }
     });
 }
@@ -128,22 +145,22 @@ function update() {
         ball.update(canvas);
         checkObstacleCollisions();
         const dist = Math.hypot(ball.x - hole.x, ball.y - hole.y);
-        if (!hasWon && dist < ball.radius + hole.radius) {
+        // Increase detection radius significantly
+        if (!hasWon && dist < ball.radius + hole.radius + 15) {
             hasWon = true;
             ball.visible = false;
             isMoving = false;
+
             setTimeout(() => {
                 if (currentLevelIndex < levels.length - 1) {
-                    // Removed pop-up message
                     currentLevelIndex++;
                     loadLevel();
                 } else {
-                    // Save final score with playerName and update leaderboard
                     saveScore(score, playerName);
-                    // Optionally show a final message (or remove it entirely)
-                    // alert('Congratulations ' + playerName + '! You completed all holes with a score of: ' + score);
                     renderLeaderboard('leaderboard');
                 }
+                 // Play holed sound after the level loads or the game ends
+                playSound(holeSound);
             }, 100);
         }
         if (ball.speed < 0.1) {
